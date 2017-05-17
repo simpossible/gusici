@@ -28,7 +28,7 @@ export default class RecentFreshView extends Component {
             model = data.gushiwens;
             model.map((item) => {
                 let mapStr = "(/<br />/g";
-                let regex = new RegExp("<br />", "g");
+                let regex = new RegExp("<.*?>", "g");
                 let content = item.cont.replace(regex, "");
                 item.cont = content;
             });
@@ -49,8 +49,7 @@ export default class RecentFreshView extends Component {
     }
 
     render() {
-
-        console.log("the navigato"+ this.props.navigator);
+        
         return (
             <View>
                 <ListView style={styles.conttainer}
