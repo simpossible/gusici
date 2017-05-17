@@ -3,6 +3,7 @@ import { AppRegistry, Text, View, TouchableHighlight, ListView, NavigatorIOS, Sc
 
 import DetailSecHeader from './detailSecHeader'
 import DetailCell from './detailCell'
+
 export default class DetailPoem extends Component {
     //data  传入的data detaildata 请求回来的具体数据
     constructor(props) {
@@ -18,6 +19,7 @@ export default class DetailPoem extends Component {
         this.yiTexts = [];
         this.zhuTexts = [];
         this.sectionItems = [];
+        this.modules =[];
         this.getData();
 
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (r1, r2) => r1 !== r2 });
@@ -48,10 +50,12 @@ export default class DetailPoem extends Component {
                 //解析翻译                
                 let data = [];
                 let sectionItems = [];
+                let module = [];
                 let translate = jsonData.tb_fanyis.fanyis;
                 if (translate != undefined) {
                     data.push(translate);
                     sectionItems.push("参考翻译");
+                    module.push('shiwen/fanyi');
                 }
 
                 // 解析赏析
@@ -59,6 +63,7 @@ export default class DetailPoem extends Component {
                 if (analy != undefined) {
                     data.push(analy);
                     sectionItems.push("参考赏析");
+                    module.push('shiwen/shangxi');
                 }
 
                 //作者介绍
@@ -66,7 +71,9 @@ export default class DetailPoem extends Component {
                 if (authorIntro != undefined) {
                     data.push([authorIntro]);
                     sectionItems.push("作者介绍");
+                    module.push('author/author');
                 }
+                this.modules = module;
 
                 this.sectionItems = sectionItems;
                 this.listDataSource = this.ds.cloneWithRowsAndSections(data);
@@ -273,10 +280,10 @@ export default class DetailPoem extends Component {
         return (
             <ScrollView style={this.styles.mainPage} >
 
-
                 <ListView dataSource={this.listDataSource}
                     renderRow={(data, sectionID, rowID, highlightRow) => {
-                        return <DetailCell celldata={data} />
+                        console.log("++++is"+this.modules[sectionID] + 'id is'+ sectionID);
+                        return <DetailCell celldata={data} module={this.modules[sectionID]} />
                     }}
                     renderSectionHeader={(sectionData, sectionID) => {
                         return (<DetailSecHeader showText={this.sectionItems[sectionID]} height={50} />)
