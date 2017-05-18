@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { AppRegistry, Text, View, TouchableHighlight, ListView, NavigatorIOS } from 'react-native'
 import ListCell from './ListCell'
-import {
-    StackNavigator,
-} from 'react-navigation';
+
 
 export default class RecentFreshView extends Component {
 
@@ -27,6 +25,7 @@ export default class RecentFreshView extends Component {
         fetch('http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi', { method: 'GET' }).then((response) => response.json()).then((data) => {
             model = data.gushiwens;
             model.map((item) => {
+                console.log('sdsdasd---');
                 let mapStr = "(/<br />/g";
                 let regex = new RegExp("<.*?>", "g");
                 let content = item.cont.replace(regex, "");
