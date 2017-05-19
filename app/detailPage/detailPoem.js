@@ -3,6 +3,8 @@ import { AppRegistry, Text, View, TouchableHighlight, ListView, NavigatorIOS, Sc
 
 import DetailSecHeader from './detailSecHeader'
 import DetailCell from './detailCell'
+import IconBarView from './iconBarView'
+import DetailInfoView from './detailInfoView'
 
 export default class DetailPoem extends Component {
     //data  传入的data detaildata 请求回来的具体数据
@@ -19,8 +21,9 @@ export default class DetailPoem extends Component {
         this.yiTexts = [];
         this.zhuTexts = [];
         this.sectionItems = [];
-        this.modules =[];
+        this.modules = [];
         this.getData();
+        this.showItemView = false;//当前显示的是否是 二级的详细信息
 
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (r1, r2) => r1 !== r2 });
         this.listDataSource = this.ds.cloneWithRowsAndSections([["a"], ["b", ["c"]]]);
@@ -214,6 +217,14 @@ export default class DetailPoem extends Component {
                 left: 15,
                 color: "#676767",
                 lineHeight: 20
+            },
+            infoStyle:{
+                position:'absolute',
+                backgroundColor:'#f2f1e4',
+                top:64,
+                left:0,
+                bottom:40,
+                right:0,                
             }
         }
     }
@@ -268,9 +279,49 @@ export default class DetailPoem extends Component {
             if (this.yizhuCankao != undefined) {
                 return (<Text style={this.styles.translateRefTxt}>{"参考资料:"}{'\n'}{'1、'}{this.yizhuCankao}}</Text>);
             }
-
         } else {
             return;
+        }
+    }
+
+    generateIconBars() {//那个不是tabbar 的tab bar
+        let backIcon = {
+            icon: require('../res/back@2x.png'), callback: () => {
+
+            }
+        }
+
+        let startIcon = {
+            icon: require('../res/rating.png'), callback: () => {
+                console.log('xixixixixi');
+            }
+        }
+        let heartIcon = {
+            icon: require('../res/star.png'), callback: () => {
+                console.log('xixixixixi');
+            }
+        }
+        let items;
+        if (this.showItemView) {
+            items = [startIcon, heartIcon];
+        } else {
+            item = [backIcon]
+        }
+
+
+        return <IconBarView icons={items} height={40} />
+
+    }
+
+    jumpToDetailInfo(data) {//动画进入info 的视图
+        console.log('the data is ' + JSON.stringify(data));
+        this.showItemView = true;
+        this.setState((state) => { return { jumpData:data } });
+    }
+
+    generateInfoView() {
+        if (this.showItemView) {            
+            return <DetailInfoView data={this.state.jumpData} style={this.styles.infoStyle}/>
         }
     }
 
@@ -278,12 +329,10 @@ export default class DetailPoem extends Component {
         let tranicon = this.shouldLoadTransLate ? require("../res/yipic2.png") : require("../res/yipic.png");
         let notIcon = this.shouldLoadNote ? require("../res/zhupic2.png") : require("../res/zhupic.png");
         return (
-            <ScrollView style={this.styles.mainPage} >
-
+            <View style={this.styles.mainPage} >
                 <ListView dataSource={this.listDataSource}
                     renderRow={(data, sectionID, rowID, highlightRow) => {
-                        console.log("++++is"+this.modules[sectionID] + 'id is'+ sectionID);
-                        return <DetailCell celldata={data} module={this.modules[sectionID]} />
+                        return <DetailCell celldata={data} module={this.modules[sectionID]} callback={{ method: this.jumpToDetailInfo.bind(this) }} />
                     }}
                     renderSectionHeader={(sectionData, sectionID) => {
                         return (<DetailSecHeader showText={this.sectionItems[sectionID]} height={50} />)
@@ -314,11 +363,13 @@ export default class DetailPoem extends Component {
                         );
                     }}
 
-                    automaticallyAdjustContentInsets={false}
+                    automaticallyAdjustContentInsets={true}
                 >
 
                 </ListView>
-            </ScrollView >
+                {this.generateIconBars()}
+                {this.generateInfoView()}
+            </View >
         );
     }
 }
