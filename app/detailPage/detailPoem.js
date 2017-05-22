@@ -23,7 +23,7 @@ export default class DetailPoem extends Component {
         this.sectionItems = [];
         this.modules = [];
         this.getData();
-        this.showItemView = false;//当前显示的是否是 二级的详细信息
+        this.showItemView = false;//当前显示的是否是 二级的详细信息        
 
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (r1, r2) => r1 !== r2 });
         this.listDataSource = this.ds.cloneWithRowsAndSections([["a"], ["b", ["c"]]]);
@@ -32,8 +32,7 @@ export default class DetailPoem extends Component {
 
     getData() { //获取数据data
         let dataModel = this.props.data;
-        let uri = `http://app.gushiwen.org/api/shiwen/view.aspx?id=${dataModel.id}&token=gswapi&random=${Math.random() * 1000}`;
-        console.log(`the uri is ${uri}`);
+        let uri = `http://app.gushiwen.org/api/shiwen/view.aspx?id=${dataModel.id}&token=gswapi&random=${Math.random() * 1000}`;        
         fetch(uri, { method: 'GET' })
             .then((response) => { return response.json() })
             .then((jsonData) => {
@@ -81,10 +80,8 @@ export default class DetailPoem extends Component {
                 this.sectionItems = sectionItems;
                 this.listDataSource = this.ds.cloneWithRowsAndSections(data);
 
-
                 this.detaildata.tb_gushiwen.yizhu = yizhu;
                 this.setState((state) => { return { referesh: true } });
-
             });
     }
 
@@ -218,13 +215,13 @@ export default class DetailPoem extends Component {
                 color: "#676767",
                 lineHeight: 20
             },
-            infoStyle:{
-                position:'absolute',
-                backgroundColor:'#f2f1e4',
-                top:64,
-                left:0,
-                bottom:40,
-                right:0,                
+            infoStyle: {
+                position: 'absolute',
+                backgroundColor: '#f2f1e4',
+                top: 64,
+                left: 0,
+                bottom: 40,
+                right: 0,
             }
         }
     }
@@ -286,8 +283,8 @@ export default class DetailPoem extends Component {
 
     generateIconBars() {//那个不是tabbar 的tab bar
         let backIcon = {
-            icon: require('../res/back@2x.png'), callback: () => {
-
+            icon: require('../res/back.png'), callback: () => {                
+                this.refs.info.back();                //调用消失的动画 动画完成后 再彻底消失
             }
         }
 
@@ -302,26 +299,29 @@ export default class DetailPoem extends Component {
             }
         }
         let items;
-        if (this.showItemView) {
-            items = [startIcon, heartIcon];
+
+        if (this.showItemView == true) {
+            items = [backIcon, startIcon];
         } else {
-            item = [backIcon]
+            items = [startIcon, heartIcon];
         }
 
-
-        return <IconBarView icons={items} height={40} />
+        return <IconBarView  icons={items} height={40} />
 
     }
 
-    jumpToDetailInfo(data) {//动画进入info 的视图
-        console.log('the data is ' + JSON.stringify(data));
+    jumpToDetailInfo(data) {//动画进入info 的视图        
         this.showItemView = true;
-        this.setState((state) => { return { jumpData:data } });
+        this.setState((state) => { return { jumpData: data } });
     }
 
+    infoViewDismissed(){//info 的视图消失掉了
+        this.showItemView=false;        
+         this.setState((state) => { return { } });
+    }
     generateInfoView() {
-        if (this.showItemView) {            
-            return <DetailInfoView data={this.state.jumpData} style={this.styles.infoStyle}/>
+        if (this.showItemView == true) {            
+            return <DetailInfoView ref='info' data={this.state.jumpData} style={this.styles.infoStyle} dismissCallBack={this.infoViewDismissed.bind(this)}/>
         }
     }
 

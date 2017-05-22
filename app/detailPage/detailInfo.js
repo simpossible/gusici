@@ -3,6 +3,13 @@ import { AppRegistry, Dimensions, Animated, Button, StyleSheet, ActivityIndicato
 import HTMLView from 'react-native-htmlview';
 export default class DetailInfo extends Component {
 
+    constructor(props) {
+        let cont = props.info.cont;
+        cont = cont.replace(new RegExp("</p>\r\n<p>", 'g'), '\n\n');
+        props.info.cont = cont;
+
+        super(props);
+    }
 
     getHtmlView() {
         let cont = this.props.info.cont;
@@ -40,7 +47,7 @@ export default class DetailInfo extends Component {
     }
     render() {
         let style = this.props.style == undefined ? {} : this.props.style;
-        style = Object.assign(style, { left: 10,backgroundColor:'#f2f1e4' });
+        style = Object.assign(style, { left: 10, backgroundColor: '#f2f1e4' });
         return (
             <View style={style}>
                 <Text style={styles.incellAuthor}><Text style={styles.incellAuthorName}>作者:</Text> {this.props.info.author}</Text>

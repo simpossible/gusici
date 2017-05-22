@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AppRegistry, Text, View, NavigatorIOS } from 'react-native'
+import { AppRegistry, ScrollView, Text, View, NavigatorIOS } from 'react-native'
 
 import Component1 from "./app/components/component1/Component1"
 
@@ -8,11 +8,16 @@ import HomeHeader from './app/homepage/header'
 import MenuBar from './app/homepage/menubar'
 import RecentFreshView from './app/homepage/recentfresh/RecentFreshView'
 import DetailPoem from './app/detailPage/detailPoem'
+import PoemView from './app/homepage/poem/poemView'
+
+import { AuthorManager } from './app/author/AuthorManager'
 
 export default class myapp extends Component {
 
     constructor() {
         super();
+        let authors = new AuthorManager();
+        authors.getAllAuthorPic();
         this.state = {
             bars: [
                 {
@@ -40,28 +45,38 @@ export default class myapp extends Component {
         }
     }
 
+
+
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, }}>
                 <HomeHeader />
-                <MenuBar bars={this.state.bars} />
-                <RecentFreshView style={{ backgroundColor: 'blue', flex: 1, }} jumpCallBack={(data) => {
-                    this.props.navigator.push({
-                        component: DetailPoem,
-                        navigationBarHidden: false,
-                        barTintColor: '#D1D0A9',
-                        leftButtonTitle: '首页',
-                        backButtonTitle:"首页",
-                        title:`${data.nameStr}`,
-                        rightButtonIcon:require('./app/res/write.png'),
-                        leftButtonIcon: require('./app/res/back@2x.png'),
-                        onLeftButtonPress:()=>{
-                            this.props.navigator.pop();
-                        },
-                        passProps: {data:data},
-                        tintColor: '#505050'
-                    });
-                }}></RecentFreshView>
+                <MenuBar bars={this.state.bars}   />
+                <ScrollView horizontal={true} automaticallyAdjustContentInsets={false } pagingEnabled={true}>
+                    <RecentFreshView style={{ backgroundColor: 'blue', flex: 1, }} jumpCallBack={(data) => {
+                        this.props.navigator.push({
+                            component: DetailPoem,
+                            navigationBarHidden: false,
+                            barTintColor: '#D1D0A9',
+                            leftButtonTitle: '首页',
+                            backButtonTitle: "首页",
+                            title: `${data.nameStr}`,
+                            rightButtonIcon: require('./app/res/write.png'),
+                            leftButtonIcon: require('./app/res/back@2x.png'),
+                            onLeftButtonPress: () => {
+                                this.props.navigator.pop();
+                            },
+                            passProps: { data: data },
+                            tintColor: '#505050'
+                        });
+                    }}
+                       
+                    >
+                    </RecentFreshView>
+
+                    <PoemView url='http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi' />
+
+                </ScrollView>
             </View>
         );
     }

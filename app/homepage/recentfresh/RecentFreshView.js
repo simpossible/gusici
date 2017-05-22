@@ -1,35 +1,40 @@
 import React, { Component } from 'react'
-import { AppRegistry, Text, View, TouchableHighlight, ListView, NavigatorIOS } from 'react-native'
+import { AppRegistry, Dimensions, Text, View, TouchableHighlight, ListView, NavigatorIOS } from 'react-native'
 import ListCell from './ListCell'
 
+import { AuthorManager } from '../../author/AuthorManager'
 
 export default class RecentFreshView extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
+
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.dataSrouce = ds.cloneWithRows([
             { author: "礼拜" }
         ]);
+
+        this.url='http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi'
         this.getData((data) => {
             this.dataSrouce = ds.cloneWithRows(data.gushiwens);
             this.setState((state) => {
                 return { needFresh: true }
             });
         });
-
     }
 
 
     getData(callback) {
-        fetch('http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi', { method: 'GET' }).then((response) => response.json()).then((data) => {
+        fetch( this.url, { method: 'GET' }).then((response) => response.json()).then((data) => {
             model = data.gushiwens;
             model.map((item) => {
-                console.log('sdsdasd---');
                 let mapStr = "(/<br />/g";
                 let regex = new RegExp("<.*?>", "g");
                 let content = item.cont.replace(regex, "");
                 item.cont = content;
+                let authmanager = new AuthorManager;
+
             });
             callback(data);
 
@@ -48,9 +53,11 @@ export default class RecentFreshView extends Component {
     }
 
     render() {
-        
+        let vwidth = Dimensions.get('window').width
+        let containerStyle = Object.assign({}, this.props.style);
+        containerStyle = Object.assign(containerStyle, { width:vwidth});
         return (
-            <View>
+            <View style={containerStyle}>
                 <ListView style={styles.conttainer}
                     dataSource={this.dataSrouce}
                     renderRow={(data) => {
@@ -58,7 +65,8 @@ export default class RecentFreshView extends Component {
                             showName: data.nameStr,
                             des: `作者:${data.author}`,
                             content: data.cont,
-                            icon: "http://img.gushiwen.org/authorImg/libai.jpg"
+                            icon: '',
+                            author: data.author,
                         }
                         }
                             callback={(data) => {
@@ -83,9 +91,6 @@ export default class RecentFreshView extends Component {
 }
 const styles = {
     conttainer: {
-        backgroundColor: 'blue',
-
-
     },
     section: {
         height: 42,

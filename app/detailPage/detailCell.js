@@ -49,8 +49,7 @@ export default class DetailCell extends Component {
 
     loadDetail() {//加载 更多的详细信息
         this.isloading = true;
-        let uri = `${host}${this.props.module}.aspx?id=${this.props.celldata.id}&token=gswapi&random=${Math.random() * 1000}`;
-        console.log("the uri is " + uri);
+        let uri = `${host}${this.props.module}.aspx?id=${this.props.celldata.id}&token=gswapi&random=${Math.random() * 1000}`;        
         fetch(uri, { method: 'GET' }).then((response) => { return response.json() })
             .then((jsonData) => {
                 console.log("   " + JSON.stringify(jsonData))
@@ -88,7 +87,7 @@ export default class DetailCell extends Component {
     render() {
         let icon = this.shouldExtend ? require('../res/arrow_grey_up_small.png') : require('../res/arrow_grey_down_small.png');
         return (
-            <TouchableHighlight onPress={this.cellClicked.bind(this)}>
+            <TouchableHighlight onPress={this.cellClicked.bind(this)} underlayColor='#d1cfad'>
                 <View style={{ borderBottomWidth: 1, borderBottomColor: '#e0dede' }}>
                     <Text style={styles.title}>{this.props.celldata.nameStr}</Text>
                     {this.generateContent()}
