@@ -1,15 +1,10 @@
 import React, { Component } from 'react'
 import { AppRegistry, Text, View, TouchableHighlight, Image } from 'react-native'
 
-import {AuthorManager} from '../../author/AuthorManager'
+import { AuthorManager } from '../../author/AuthorManager'
 export default class ListCell extends Component {
     static defaultProps = {
-        showModel: {
-            showName: "namenamenamenamenamenamenamenamenamenamenamenamenamenamenamename",
-            des: "heh",
-            content: "content",
-            icon: "http://img.gushiwen.org/authorImg/libai.jpg",
-        },
+
         callback: () => { },
         data: {},//这个data 是存原始数据的       
     }
@@ -19,12 +14,24 @@ export default class ListCell extends Component {
         this.showNameCallBack = () => { };//第一行的单机回调
         this.callback = () => { };//整体的回调         
         let authorManager = new AuthorManager();
-        authorManager.getPicUriByName(this.props.showModel.author,(uri)=>{            
+        authorManager.getPicUriByName(this.props.showModel.author, (uri) => {
             let url = `http://img.gushiwen.org/authorImg/${uri}.jpg`;
             this.props.showModel.icon = url;
-            this.setState((data)=>{return {ref:true}});
+            Object.assign(this.props.data, { icon: url });
+            this.setState((data) => { return { ref: true } });
         });
-        
+        console.log("构造cell");
+    }
+    componentWillReceiveProps(nextProps) {
+
+        let authorManager = new AuthorManager();
+        authorManager.getPicUriByName(this.props.showModel.author, (uri) => {
+            let url = `http://img.gushiwen.org/authorImg/${uri}.jpg`;
+            this.props.showModel.icon = url;
+            Object.assign(nextProps.data, { icon: url });
+            Object.assign(nextProps.showModel, { icon: url });
+            this.setState((data) => { return { ref: true } });
+        });
     }
 
     render() {

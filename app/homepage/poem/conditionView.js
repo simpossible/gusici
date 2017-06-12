@@ -11,9 +11,8 @@ export default class ConditionView extends Component {
 
     genConditionBars() {
 
-     return  this.props.conditions.map((item,index) => {
-            // console.log('这些条件' + JSON.stringify(item));            
-            return <ConditionBar key={`conditionviwe${index}`} name={item.name} buttons={item.buttons} />
+     return  this.props.conditions.map((item,index) => {            
+            return <ConditionBar key={`conditionviwe${index}`} name={item.name} buttons={item.buttons} style={styles.conditionbar} selected={2} />
         });
     }
 
@@ -26,15 +25,16 @@ export default class ConditionView extends Component {
 }
 
 const styles = {
-    main: {        
-        backgroundColor: 'green',
+    main: {                
     },
     type: {
 
     },
     buttons: {
         flexDirecttion: 'row',
-    }
+    },conditionbar:{
+        height :40,
+    }    
 }
 
 AppRegistry.registerComponent('ConditionView', () => ConditionView);

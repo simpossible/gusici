@@ -10,14 +10,14 @@ export default class RecentFreshView extends Component {
         super(props);
 
 
-        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-        this.dataSrouce = ds.cloneWithRows([
-            { author: "礼拜" }
+        this.ds = new ListView.DataSource({ rowHasChanged:  (r1, r2) => r1 !== r2 });
+        this.dataSrouce = this.ds.cloneWithRows([
+          
         ]);
 
         this.url='http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi'
         this.getData((data) => {
-            this.dataSrouce = ds.cloneWithRows(data.gushiwens);
+            this.dataSrouce = this.ds.cloneWithRows(data.gushiwens);
             this.setState((state) => {
                 return { needFresh: true }
             });

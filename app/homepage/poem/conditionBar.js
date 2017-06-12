@@ -1,49 +1,71 @@
 import React, { Component } from 'react'
-import { AppRegistry,Button, Dimensions, Text, View, TouchableHighlight, ListView, NavigatorIOS } from 'react-native'
+import { AppRegistry, Image, Button, Dimensions, Text, View, TouchableHighlight, ListView, NavigatorIOS } from 'react-native'
 
 export default class ConditionBar extends Component {
     constructor(props) {
         super(props);
-
+        console.log("khk"+JSON.stringify(props.buttons));
     }
 
-    generateButtons() {        
-     return  this.props.buttons.map((item,index)=>{ 
+    generateButtons() {
+        return this.props.buttons.map((item, index) => {
             let name = item.name;
             let callBack = item.callBack;
-            return <Text key={`conditionbartext${index}`}>{name}</Text>
-            // return <Button title = {name} onPress={()=>{callBack(name)}} color="#841584" style={styles.button}/>
+            let style = Object.assign({}, styles.button);
+
+            if (this.props.selected == index) {
+                style.color = '#a22919';
+            }
+            return <View key={'conditionbartext' + index} >
+                <TouchableHighlight onPress={                    
+                    ()=>{item.callback(name)}}>
+                    <Text style={style}>{name}</Text>
+                </TouchableHighlight>
+            </View>
         });
     }
 
-    render() {        
+    render() {
+        let mainstype = Object.assign({}, this.props.style);
+        mainstype = Object.assign(mainstype, styles.main);
+        let icon = require('../../res/downtringle.png');
         return (
-            <View style={styles.main}>
-                <Text>{this.props.name}</Text>
+            <View style={mainstype}>
+                <Text style={styles.type}>{this.props.name}</Text>
                 <View style={styles.buttons} >
                     {this.generateButtons()}
                 </View>
+                <Image source={icon} style={styles.tringle} />
             </View>
         );
     }
 }
 
 const styles = {
-    main: {                
-        flexDirection:'row',
-        height:50,
-    },
-    type: {
+    main: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0dede',
+        alignItems: 'center',
 
     },
-    buttons:{
-        width:300,        
-        flexDirection: 'row',
-        backgroundColor:'yellow'
+    type: {
+        left: 7,
+        color: '#375e3c',
+        marginRight: 10,
     },
-    button:{
-        width:50,
-        backgroundColor:'yellow'
+    buttons: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    button: {
+        color: '#2a527a',
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    tringle: {
+        position: 'absolute',
+        right: 10,
     }
 }
 

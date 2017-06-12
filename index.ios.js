@@ -45,36 +45,36 @@ export default class myapp extends Component {
         }
     }
 
-
+    jump(data) {
+        this.props.navigator.push({
+            component: DetailPoem,
+            navigationBarHidden: false,
+            barTintColor: '#D1D0A9',
+            leftButtonTitle: '首页',
+            backButtonTitle: "首页",
+            title: `${data.nameStr}`,
+            rightButtonIcon: require('./app/res/write.png'),
+            leftButtonIcon: require('./app/res/back@2x.png'),
+            onLeftButtonPress: () => {
+                this.props.navigator.pop();
+            },
+            passProps: { data: data },
+            tintColor: '#505050'
+        });
+    }
 
     render() {
         return (
-            <View style={{ flex: 1, }}>
+            <View style={{ flex: 1,}}>
                 <HomeHeader />
-                <MenuBar bars={this.state.bars}   />
-                <ScrollView horizontal={true} automaticallyAdjustContentInsets={false } pagingEnabled={true}>
-                    <RecentFreshView style={{ backgroundColor: 'blue', flex: 1, }} jumpCallBack={(data) => {
-                        this.props.navigator.push({
-                            component: DetailPoem,
-                            navigationBarHidden: false,
-                            barTintColor: '#D1D0A9',
-                            leftButtonTitle: '首页',
-                            backButtonTitle: "首页",
-                            title: `${data.nameStr}`,
-                            rightButtonIcon: require('./app/res/write.png'),
-                            leftButtonIcon: require('./app/res/back@2x.png'),
-                            onLeftButtonPress: () => {
-                                this.props.navigator.pop();
-                            },
-                            passProps: { data: data },
-                            tintColor: '#505050'
-                        });
-                    }}
-                       
-                    >
-                    </RecentFreshView>
+                <MenuBar bars={this.state.bars} />
+                <ScrollView horizontal={true} automaticallyAdjustContentInsets={false} pagingEnabled={true}>
+                    {/*<RecentFreshView style={{ backgroundColor: 'blue', flex: 1, }} jumpCallBack={this.jump.bind(this)}
 
-                    <PoemView url='http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi' />
+                    >
+                    </RecentFreshView>*/}
+
+                    <PoemView url='http://app.gushiwen.org/api/upTimeTop11.aspx?n=4173603315&page=1&pwd=&id=0&token=gswapi' jumpCallBack={this.jump.bind(this)}/>
 
                 </ScrollView>
             </View>
