@@ -63,12 +63,19 @@ export default class myapp extends Component {
         });
     }
 
+    scrollViewScrolled(a){
+        console.log("sdsd"+a);
+    }
+
     render() {
         return (
             <View style={{ flex: 1,}}>
                 <HomeHeader />
                 <MenuBar bars={this.state.bars} />
-                <ScrollView horizontal={true} automaticallyAdjustContentInsets={false} pagingEnabled={true}>
+                <ScrollView horizontal={true} automaticallyAdjustContentInsets={false} pagingEnabled={true}
+                scrollEventThrottle={200}
+                onScroll={this.scrollViewScrolled.bind(this)}
+                >
                     {/*<RecentFreshView style={{ backgroundColor: 'blue', flex: 1, }} jumpCallBack={this.jump.bind(this)}
 
                     >

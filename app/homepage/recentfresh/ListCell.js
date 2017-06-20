@@ -20,10 +20,8 @@ export default class ListCell extends Component {
             Object.assign(this.props.data, { icon: url });
             this.setState((data) => { return { ref: true } });
         });
-        console.log("构造cell");
     }
-    componentWillReceiveProps(nextProps) {
-
+    componentWillReceiveProps(nextProps) {        
         let authorManager = new AuthorManager();
         authorManager.getPicUriByName(this.props.showModel.author, (uri) => {
             let url = `http://img.gushiwen.org/authorImg/${uri}.jpg`;

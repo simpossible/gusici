@@ -12,8 +12,8 @@ export default class ConditionBar extends Component {
             let name = item.name;
             let callBack = item.callBack;
             let style = Object.assign({}, styles.button);
-
-            if (this.props.selected == index) {
+            console.log("+++"+this.props.selected+"+++"+item.name);
+            if (this.props.selected == item.name) {
                 style.color = '#a22919';
             }
             return <View key={'conditionbartext' + index} >

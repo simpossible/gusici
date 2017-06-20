@@ -28,16 +28,16 @@ export default class PoemView extends Component {
         this.types = ['不限', '写景', '咏物', '春天', '夏天'];
         this.dynastys = ['不限', '先秦', '两汉', '魏晋', '南北朝'];;
         this.formates = ['不限', '诗', '词', '曲', '文言文'];
-        this.conditionT = this.types[1] == "不限" ? '' : this.types[1];
-        this.conditionC = this.dynastys[0] == "不限" ? '' : this.dynastys[0];
-        this.conditionX = this.formates[0] == "不限" ? '' : this.formates[0];
+        this.conditionT = this.types[1];
+        this.conditionC = this.dynastys[0];
+        this.conditionX = this.formates[0];
 
         this.referesh();
 
     }
     referesh() {
         this.getData((data) => {
-            let ds =new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+            let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
             this.dataSrouce = ds.cloneWithRows(data.gushiwens);
             this.setState((state) => {
                 return { needFresh: true }
@@ -45,8 +45,8 @@ export default class PoemView extends Component {
         });
     }
 
-    getData(callback) {        
-        let url = `http://app.gushiwen.org/api/shiwen/type.aspx?n=2441288939&page=${this.currentpage}&pwd=&id=0&token=gswapi&c=${this.conditionC}&p=${this.currentpage}&x=${this.conditionX}&t=${this.conditionT}`;
+    getData(callback) {
+        let url = `http://app.gushiwen.org/api/shiwen/type.aspx?n=2441288939&page=${this.currentpage}&pwd=&id=0&token=gswapi&c=${this.conditionC == "不限" ? '' : this.conditionC}&p=${this.currentpage}&x=${this.conditionX == "不限" ? '' : this.conditionX}&t=${this.conditionT == "不限" ? '' : this.conditionT}`;
         console.log("the url si " + url);
         fetch(url, { method: 'GET' }).then((response) => response.json()).then((data) => {
             this.allPage = data.sumPage;
@@ -66,39 +66,38 @@ export default class PoemView extends Component {
     }
 
     typeConditionClicked(name) {
-        this.conditionT = name == "不限" ? '' : name;
-        console.log(`typeConditionClicked${name}`);
+        this.currentpage = 1;
+        this.conditionT = name;
         this.referesh();
     }
 
     dynastyClicked(name) {
-        this.conditionC = name == "不限" ? '' : name;
-        console.log(`dynastyClicked${name}`);
+        this.currentpage = 1;
+        this.conditionC = name;
         this.referesh();
     }
 
     formateClicked(name) {
-        this.conditionX = name == "不限" ? '' : name;
-        console.log(`formateClicked${name}`);
+        this.currentpage = 1;
+        this.conditionX = name;
         this.referesh();
     }
 
-    generateConditionButtons(name, types, callback) {
+    generateConditionButtons(name, selectName, types, callback) {
         let buttons = [];
         for (var i = 0; i < types.length; i++) {
             let name = types[i];
             // let callback = this.tyleConditionClicked;           
             buttons.push({ name: name, callback: callback });
         }
-        return { name: name, buttons: buttons }
-
+        return { name: name, buttons: buttons, selected: selectName }
     }
 
 
     genConditionView() {
-        let type = this.generateConditionButtons('类型', this.types, this.typeConditionClicked.bind(this));
-        let dyna = this.generateConditionButtons('朝代', this.dynastys, this.dynastyClicked.bind(this));
-        let form = this.generateConditionButtons('形式', this.formates, this.formateClicked.bind(this));
+        let type = this.generateConditionButtons('类型', this.conditionT, this.types, this.typeConditionClicked.bind(this));
+        let dyna = this.generateConditionButtons('朝代', this.conditionC, this.dynastys, this.dynastyClicked.bind(this));
+        let form = this.generateConditionButtons('形式', this.conditionX, this.formates, this.formateClicked.bind(this));
 
 
         let conditions = [type, dyna, form];
@@ -106,7 +105,6 @@ export default class PoemView extends Component {
     }
 
     generatePagebar() {
-        console.log("allpage = " + this.allPage);
         return <PageBar ref='pagebar' style={styles.pageBar} callBack={this.pageChanged.bind(this)} allPage={this.allPage} currentPage={this.currentpage} />
     }
 
@@ -159,7 +157,7 @@ export default class PoemView extends Component {
 const styles = {
     conttainer: {
         flex: 1,
-        backgroundColor: 'red',
+        backgroundColor: '#e2e2e2',
     },
     section: {
         height: 42,

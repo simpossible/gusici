@@ -12,7 +12,7 @@ export default class ConditionView extends Component {
     genConditionBars() {
 
      return  this.props.conditions.map((item,index) => {            
-            return <ConditionBar key={`conditionviwe${index}`} name={item.name} buttons={item.buttons} style={styles.conditionbar} selected={2} />
+            return <ConditionBar key={`conditionviwe${index}`} name={item.name} buttons={item.buttons} style={styles.conditionbar} selected={item.selected} />
         });
     }
 
